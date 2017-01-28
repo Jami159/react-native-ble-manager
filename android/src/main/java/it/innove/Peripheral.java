@@ -276,6 +276,8 @@ public class Peripheral extends BluetoothGattCallback {
 	public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
 		super.onCharacteristicChanged(gatt, characteristic);
 
+		mtuRequest(32);
+
 		byte[] dataValue = characteristic.getValue();
 		Log.d(LOG_TAG, "Read: " + BleManager.bytesToHex(dataValue) + " from peripheral: " + device.getAddress());
 
