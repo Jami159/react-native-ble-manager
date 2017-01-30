@@ -272,13 +272,19 @@ public class Peripheral extends BluetoothGattCallback {
 		return b & 0xFF;
 	}
 
+	/*new code
+	@Override
+	public void onMtuChanged(BluetoothGatt gatt, int mtu, int status) {
+		super.onMtuChanged(gatt, mtu, status);
+
+	}
+	*/
+
 	@Override
 	public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
 		super.onCharacteristicChanged(gatt, characteristic);
 
-		requestMtu(32);
-
-		byte[] dataValue = characteristic.getValue();
+		byte[32] dataValue = characteristic.getValue();
 		Log.d(LOG_TAG, "Read: " + BleManager.bytesToHex(dataValue) + " from peripheral: " + device.getAddress());
 
 		WritableMap map = Arguments.createMap();
