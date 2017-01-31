@@ -85,7 +85,7 @@ public class Peripheral extends BluetoothGattCallback {
 				this.requestMtu();
 			}
 			//--//
-			
+
 		}else{
 			if (gatt != null) {
 				WritableMap map = this.asWritableMap(gatt);
@@ -310,7 +310,7 @@ public class Peripheral extends BluetoothGattCallback {
 		WritableMap map = Arguments.createMap();
 		map.putString("peripheral", device.getAddress());
 		map.putString("characteristic", characteristic.getUuid().toString());
-		map.putString("value", BleManager.bytesToHex(dataValue));
+		map.putString("value", BleManager.bytesToHex(dataValue)+"HELLO");
 		sendEvent("BleManagerDidUpdateValueForCharacteristic", map);
 	}
 
