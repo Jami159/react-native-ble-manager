@@ -41,6 +41,11 @@ public class Peripheral extends BluetoothGattCallback {
 
 	private List<byte[]> writeQueue = new ArrayList<>();
 
+	//my code
+	private static final int MAX_MTU = 512;
+	private int supportedMTU;
+	//--//
+
 	public Peripheral(BluetoothDevice device, int advertisingRSSI, byte[] scanRecord, ReactContext reactContext) {
 
 		this.device = device;
@@ -241,6 +246,13 @@ public class Peripheral extends BluetoothGattCallback {
 
 			sendConnectionEvent(device, "BleManagerConnectPeripheral");
 
+			//my code
+			int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+			if (currentapiVersion >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+				this.requestMtu();
+			}
+			//--//
+
 		} else if (newState == BluetoothGatt.STATE_DISCONNECTED){
 
 			if (connected) {
@@ -272,19 +284,26 @@ public class Peripheral extends BluetoothGattCallback {
 		return b & 0xFF;
 	}
 
-	/*new code
+	//my code
+	private void requestMtu() {
+		this.gatt.requestMtu(MAX_MTU);
+	}
+
 	@Override
 	public void onMtuChanged(BluetoothGatt gatt, int mtu, int status) {
 		super.onMtuChanged(gatt, mtu, status);
 
+		if (status == BluetoothGatt.GATT_SUCCESS) {
+			this.supportedMTU = mtu;
+		}
 	}
-	*/
+	//--//
 
 	@Override
 	public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
 		super.onCharacteristicChanged(gatt, characteristic);
 
-		byte[32] dataValue = characteristic.getValue();
+		byte[] dataValue = characteristic.getValue();
 		Log.d(LOG_TAG, "Read: " + BleManager.bytesToHex(dataValue) + " from peripheral: " + device.getAddress());
 
 		WritableMap map = Arguments.createMap();
