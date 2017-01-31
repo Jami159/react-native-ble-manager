@@ -78,6 +78,14 @@ public class Peripheral extends BluetoothGattCallback {
 			BluetoothDevice device = getDevice();
 			this.connectCallback = callback;
 			gatt = device.connectGatt(activity, false, this);
+
+			//my code
+			int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+			if (currentapiVersion >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+				this.requestMtu();
+			}
+			//--//
+			
 		}else{
 			if (gatt != null) {
 				WritableMap map = this.asWritableMap(gatt);
@@ -245,13 +253,6 @@ public class Peripheral extends BluetoothGattCallback {
 			gatt.discoverServices();
 
 			sendConnectionEvent(device, "BleManagerConnectPeripheral");
-
-			//my code
-			int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-			if (currentapiVersion >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-				this.requestMtu();
-			}
-			//--//
 
 		} else if (newState == BluetoothGatt.STATE_DISCONNECTED){
 
